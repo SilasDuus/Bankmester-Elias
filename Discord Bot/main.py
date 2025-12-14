@@ -10,7 +10,7 @@ from math import *
 # Bank Ore Data Management
 
 def save_data(data): # Gemmer data i save.json
-    with open('Discord\ Bot/save.json', 'w') as f:
+    with open('Discord Bot/save.json', 'w') as f:
         json.dump(data, f)
 
 def reset_save(password): # Sletter alt gemt data. Kræver et password for ekstra sikring
@@ -24,19 +24,19 @@ def reset_save(password): # Sletter alt gemt data. Kræver et password for ekstr
         print('Password er forkert')
 
 def get_data(ore):  # Returnere al data omkring 1 specificeret ore
-    with open('Discord\ Bot/save.json', 'r') as f:
+    with open('Discord Bot/save.json', 'r') as f:
         data = json.load(f)
         return data[ore]
     
 def change_inventory(ore, amount):  # Ændre antallet af ores i deres inventory. Tager ikke hensyn til prisskift undervejs, så burde kun ændres med 1 ad gangen
-    with open('Discord\ Bot/save.json', 'r') as f:
+    with open('Discord Bot/save.json', 'r') as f:
         data = json.load(f)
     data[ore]['inventory'] += amount
     save_data(data=data)
     update_data()
 
 def update_data(): # Opdaterer alle priser, procenter og locale vægtninger i save.json. Køres automatisk i slutningen af change_inventory
-    with open('Discord\ Bot/save.json', 'r') as f:
+    with open('Discord Bot/save.json', 'r') as f:
         data = json.load(f)
     for i in ['copper', 'coal', 'iron', 'gold', 'redstone', 'lapis', 'diamond', 'netherite']:
         data[i]['local_weight'] = (data[i]['inventory'] + 1) * data[i]['base_weight']
@@ -53,7 +53,7 @@ def update_data(): # Opdaterer alle priser, procenter og locale vægtninger i sa
     save_data(data=data)
 
 def print_data(): # Printer Data fra save.json i formatet "ORE: Inventory: {},    Price: {},     Percent: {}%\n"
-    with open('Discord\ Bot/save.json', 'r') as f:
+    with open('Discord Bot/save.json', 'r') as f:
         data = json.load(f)
     strings = []
     for i in ['copper', 'coal', 'iron', 'gold', 'redstone', 'lapis', 'diamond', 'netherite']:
@@ -68,7 +68,7 @@ def print_data(): # Printer Data fra save.json i formatet "ORE: Inventory: {},  
 # Player account data management
 
 def save_accounts(data):
-    with open('Discord\ Bot/accounts.json', 'w') as f:
+    with open('Discord Bot/accounts.json', 'w') as f:
         json.dump(data, f)
 
 def reset_accounts(password):
@@ -78,7 +78,7 @@ def reset_accounts(password):
         print("Password er forkert")
 
 def get_all_accounts():
-    with open('Discord\ Bot/accounts.json', 'r') as f:
+    with open('Discord Bot/accounts.json', 'r') as f:
         return json.load(f)
     
 def get_account(name):
