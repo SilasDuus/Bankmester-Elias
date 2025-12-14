@@ -5,6 +5,34 @@ from dotenv import load_dotenv
 import os
 import json
 from math import *
+import threading
+import asyncio
+
+# --- WEB SERVER IMPORTS (TIL CLOUD RUN) ---
+from flask import Flask
+# ----------------------------------------
+
+# ----------------------------------------------------
+# A. WEB SERVER OPSÆTNING (Health Check for Google Cloud)
+# ----------------------------------------------------
+
+# Cloud Run vil sætte denne miljøvariabel
+PORT = int(os.environ.get('PORT', 8080))
+
+# Initialiser Flask appen
+web_app = Flask(__name__)
+
+@web_app.route('/')
+def hello_world():
+    # Dette er Renders/Cloud Runs "Health Check". 
+    # Returnerer HTTP 200 OK.
+    return 'Discord Bot is Running!', 200
+
+def run_web_server():
+    """Kører Flask-webserveren i en separat tråd."""
+    # VIGTIGT: host='0.0.0.0' er nødvendigt for Cloud Run
+    print(f"Flask Webserver starting on port {PORT}...")
+    web_app.run(host='0.0.0.0', port=PORT)
 
 ###################################################
 # Bank Ore Data Management
@@ -249,4 +277,35 @@ async def reset(ctx):
 
 ###############################################
 
-bot.run(token=token, log_handler=handler, log_level=logging.DEBUG)
+# ----------------------------------------------------
+# E. KØR BOT OG WEBSERVER SAMTIDIGT
+# ----------------------------------------------------
+
+def main():
+    # 1. Start Webserveren i en separat baggrundstråd (Threading)
+    # Dette er nødvendigt for at tilfredsstille Cloud Run's portkrav.
+    server_thread = threading.Thread(target=run_web_server)
+    server_thread.daemon = True # Sørger for, at tråden lukker, når hovedprogrammet lukker
+    server_thread.start()
+    
+    # 2. Hent Discord Token
+    DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+    if not DISCORD_TOKEN:
+        print("ERROR: DISCORD_TOKEN environment variable not set.")
+        return
+
+    # 3. Kør Discord Botten asynkront i hovedtråden
+    # Bemærk: Din oprindelige kode havde log_handler=handler og log_level=logging.DEBUG
+    try:
+        bot.run(token=DISCORD_TOKEN, log_handler=handler, log_level=logging.DEBUG)
+    except Exception as e:
+        # Håndtering af fejl, hvis bot.run fejler (f.eks. pga. forkert token)
+        print(f"Error running Discord bot: {e}")
+
+if __name__ == '__main__':
+    # Initialiser dine datafiler, hvis de mangler, før vi starter
+    get_all_accounts()
+    get_data('copper') # Henter data for at tvinge en initialisering, hvis save.json mangler
+
+    # Kør hovedfunktionen, som starter begge services
+    main()
