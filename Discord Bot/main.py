@@ -87,10 +87,6 @@ def get_account(name):
 
 ###############################################
 
-if False:
-    reset_accounts('SilasErSej')
-    reset_save('SilasErSej')
-
 ###############################################
 # Discord Bot Startup
 load_dotenv()
@@ -243,6 +239,13 @@ async def pay(ctx, *, msg):
     all[msg[0]] += msg[1]
     save_accounts(all)
     await ctx.channel.send(f"{ctx.author.mention} har betalt {msg[0]} {msg[1]} coins!")
+
+@bot.command()
+async def reset(ctx):
+    if ctx.author.name == 'silasduus':
+        reset_accounts('SilasErSej')
+        reset_save('SilasErSej')
+        await ctx.channel.send("Alt gemt data og konti er nu nulstillet!")
 
 ###############################################
 
