@@ -1,0 +1,6 @@
+Hjælp - DONE
+Deposit - DONE
+Rates - DONE
+Pay - DONE
+Withdraw - DONE
+Account - DONE
