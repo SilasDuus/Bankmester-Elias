@@ -87,7 +87,7 @@ def get_account(name):
 
 ###############################################
 
-if False:
+if True:
     reset_accounts('SilasErSej')
     reset_save('SilasErSej')
 
