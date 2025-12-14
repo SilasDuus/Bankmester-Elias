@@ -87,7 +87,7 @@ def get_account(name):
 
 ###############################################
 
-if True:
+if False:
     reset_accounts('SilasErSej')
     reset_save('SilasErSej')
 
@@ -101,7 +101,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 ###############################################
 
 ###############################################
@@ -119,7 +119,12 @@ async def on_ready():
 
 @bot.command() # Viser en liste af alle kommandoer
 async def hjælp(ctx):
-    await ctx.channel.send("Hjælpeliste til alle kommandoer du kan lave\n - /deposit {ore} {antal}\nDeposit kommandoen bruges når du vil lægge ores ind i banken\nEksempel: /deposit iron 128\n - /rates\nRates kommandoen viser nuværende priser på alle ores")
+    await ctx.channel.send("""Hjælpeliste til alle kommandoer du kan lave\n
+                            - /deposit {ore} {antal}\nDeposit kommandoen bruges når du vil lægge ores ind i banken\nEksempel: /deposit iron 128\n
+                            - /rates\nRates kommandoen viser nuværende priser på alle ores\n
+                            - /account\nAccount kommandoen fortæller dig din saldo\n
+                            - /withdraw {ore} {antal}\nWithdraw kommandoen bruges når du vil hæve ores fra banken\nEksempel: /withdraw diamond 2\n
+                            - /pay {konto} {antal}\nPay kommandoen bruges når du vil betale penge til andre\nEksempel: /pay silasduus 1000""")
 
 @bot.command() # Indlægger ores til banken
 async def deposit(ctx, *, msg):
